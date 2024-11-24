@@ -1,16 +1,27 @@
 import { useState } from "react";
+import Recipe from "./Recipe";
+import IngredientsList from "./IngredientsLIst";
+
 
 export default function Main(){
-    const [ingredients, setIngredients] = useState([]);
-    const ingredientsList = ingredients.map(i => (
-        <li key={i}>{i}</li>
-    ))
+    const [ingredients, setIngredients] = useState(["all spices", "ground beef", "pasta", "tomato sauce"]);
+    const [recipeShown, setRecipeShown] = useState(false);
+   
+
+    function toggleRecipeShown(){
+        console.log("Button clicked");
+        setRecipeShown(prevShown => !prevShown)
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget)
         const newIngredient = formData.get("ingredient")
-        setIngredients(prevIngredients => [...prevIngredients,newIngredient])
+        if(newIngredient !== ""){
+            setIngredients(prevIngredients => [...prevIngredients,newIngredient])
+        }else{
+            
+        }
         event.currentTarget.reset();
     }
     return (
@@ -22,9 +33,11 @@ export default function Main(){
                         name="ingredient"/>
                 <button>Add ingredient</button>
             </form>
-            <ul>
-                {ingredientsList}
-            </ul>
+            
+            {ingredients.length > 0 && <IngredientsList 
+                                                ingredients={ingredients}
+                                                toggleRecipeShown={toggleRecipeShown}/>}
+           {recipeShown && <Recipe/>}
         </main>
     );
 }
